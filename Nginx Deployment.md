@@ -50,6 +50,12 @@ kubectl create deployment my-nginx --image=nginx
 ```bash
 kubectl get deployment
 ```
+In the output of kubectl get deployment:
+
+- READY: Shows the number of pods that are ready out of the desired number of pods. In this case, 4/4 means all 4 desired pods are running and ready.
+- UP-TO-DATE: The number of pods that have been updated to achieve the desired state.
+- AVAILABLE: The number of pods that are available to serve requests.
+- AGE: How long the deployment has been running for.
 
 ### Step 5: Get Pods
 
@@ -57,6 +63,14 @@ kubectl get deployment
 kubectl get pods
 ```
 
+You should see the status of each pod.
+
+- READY: Shows how many containers in the pod are ready (e.g., 1/1 means one container is ready).
+- STATUS: The status of the pod, which should be Running for active pods.
+- RESTARTS: The number of times the pod has been restarted.
+- AGE: How long the pod has been running.
+
+  
 ### Step 6: Scale Deployment
 
 ```bash
