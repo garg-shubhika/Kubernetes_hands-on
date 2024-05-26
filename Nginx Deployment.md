@@ -73,17 +73,23 @@ You should see the status of each pod.
   
 ### Step 6: Scale Deployment
 
+Scale the deployment to 4 replicas:
+
 ```bash
 kubectl scale deployment my-nginx --replicas=4
 ```
 
 ### Step 7: Expose Deployment
 
+Expose the deployment to make it accessible via a NodePort:
+
 ```bash
 kubectl expose deployment my-nginx --type=NodePort --port=80
 ```
 
 ### Step 8: Access Service
+
+Get the URL to access the Nginx service:
 
 ```bash
 minikube service my-nginx --url
@@ -109,8 +115,56 @@ This will give you the IP address of your Minikube cluster.
 
 ### Step 11: Clean Up
 
+Delete the deployment to clean up resources:
+
 ```bash
 kubectl delete deployment my-nginx
 ```
 
 This will delete the deployment.
+
+### Different Service Types
+
+1. **ClusterIP (default)**:
+- **Description**: Exposes the service on an internal IP in the cluster. This type makes the service only accessible within the cluster.
+- **Use Case**: Internal communication between different services within the cluster.
+- **Command Example**:
+  
+```bash
+kubectl expose deployment my-nginx --type=ClusterIP --port=80
+```
+
+2. **NodePort**:
+- **Description**: Exposes the service on each Node's IP at a static port (the NodePort).
+- A `ClusterIP` service, to which the `NodePort` service routes, is automatically created.
+- **Use Case**: Makes the service accessible from outside the cluster by requesting `<NodeIP>:<NodePort>`.
+- **Command Example**:
+  
+```bash
+kubectl expose deployment my-nginx --type=NodePort --port=80
+```
+
+3. **LoadBalancer**:
+- **Description**: Exposes the service externally using a cloud provider's load balancer. The cloud provider automatically creates an external load balancer that routes to your service.
+- **Use Case**: Suitable for production environments where you need to expose your service to the internet with a public IP.
+- **Command Example**:
+  
+```bash
+kubectl expose deployment my-nginx --type=LoadBalancer --port=80
+```
+
+4. **ExternalName**:
+- **Description**: Maps the service to the contents of the `externalName` field (e.g., `foo.bar.example.com`) by returning a CNAME record.
+- **Use Case**: Used for exposing services that are external to the cluster by returning a CNAME record with the external name.
+- **Command Example**:
+  
+```bash
+kubectl create service externalname my-nginx --external-name=example.com
+```
+
+#### Summary of Service Types
+
+- **ClusterIP**: Internal access only.
+- **NodePort**: Exposes service on each node's IP at a static port.
+- **LoadBalancer**: Uses cloud provider's load balancer to expose the service externally.
+- **ExternalName**: Maps service to an external name.
