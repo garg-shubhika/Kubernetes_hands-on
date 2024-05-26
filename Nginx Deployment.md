@@ -25,113 +25,78 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
-## Setting Up Kubernetes Deployment
+## Getting Started
 
-### Start Minikube
-
-Start Minikube and Docker daemon in separate terminals:
+### Step 1: Start Docker in terminal-1
 
 ```bash
-# Terminal-1
 sudo dockerd
+```
 
-# Terminal-2
+### Step 2: Start Minikube in terminal-2
+
+```bash
 minikube start
 ```
 
-### Create Deployment YAML
-
-Create a Kubernetes deployment YAML file for Nginx. You can create a file named `nginx-deployment.yaml` with the following content:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-```
-
-### Apply the Deployment
-
-Apply the deployment YAML to create the Nginx deployment:
+### Step 3: Create a Deployment
 
 ```bash
-kubectl apply -f nginx-deployment.yaml
+kubectl create deployment my-nginx --image=nginx
 ```
 
-### Expose the Deployment
-
-Expose the Nginx deployment by creating a service. You can expose it as a NodePort service for accessing it from localhost. Create a file named `nginx-service.yaml` with the following content:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  type: NodePort
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-```
-
-Apply the service:
+### Step 4: Verify Deployment
 
 ```bash
-kubectl apply -f nginx-service.yaml
+kubectl get deployment
 ```
 
-### Verify Deployment
-
-Ensure that the Nginx pod is running and healthy:
+### Step 5: Get Pods
 
 ```bash
 kubectl get pods
 ```
 
-Get the Minikube IP:
+### Step 6: Scale Deployment
 
 ```bash
-minikube ip
+kubectl scale deployment my-nginx --replicas=4
 ```
 
-Get the service:
+### Step 7: Expose Deployment
 
 ```bash
-kubectl get svc nginx-service
+kubectl expose deployment my-nginx --type=NodePort --port=80
 ```
 
-Forward the port to access Nginx:
+### Step 8: Access Service
 
 ```bash
-kubectl port-forward <nginx_pod_name> 8080:80
+minikube service my-nginx --url
 ```
 
-Then, try accessing Nginx using [http://localhost:8080](http://localhost:8080) in your browser.
+Copy the URL and paste it into your browser.
 
-The minikube dashboard command launches the Kubernetes dashboard for the Minikube cluster. This dashboard provides a web-based user interface for managing and monitoring your Minikube Kubernetes cluster.
+### Step 9: Access Minikube Dashboard
 
 ```bash
 minikube dashboard
 ```
 
-## Conclusion
+This will open up a web interface where you can view your deployment, pods, and replica sets.
 
-You've successfully deployed Nginx on a Kubernetes cluster using Minikube. 
+### Step 10: Get Minikube IP
+
+```bash
+minikube ip
+```
+
+This will give you the IP address of your Minikube cluster.
+
+### Step 11: Clean Up
+
+```bash
+kubectl delete deployment my-nginx
+```
+
+This will delete the deployment.
